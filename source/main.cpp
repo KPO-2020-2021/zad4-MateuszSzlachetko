@@ -1,23 +1,7 @@
-#include "lacze_do_gnuplota.hh"
 #include <iostream>
-#include <chrono>
-#include <thread>
-#include "Cuboid.h"
+#include "Scene.h"
 
-/** @file
- */
-
-void Display_menu()
-{
-    std::cout << "\n r-rotate cuboid" << std::endl;
-    std::cout << " o-repeat prevoius rotation" << std::endl;
-    std::cout << " s-show rotation matrix" << std::endl;
-    std::cout << " t-translate cuboid" << std::endl;
-    std::cout << " d-display cuboid's vertices" << std::endl;
-    std::cout << " c-check length of cuboid's sides" << std::endl;
-    std::cout << " m-show menu" << std::endl;
-    std::cout << " q-quit" << std::endl;
-}
+void Display_menu();
 
 int main()
 {
@@ -34,41 +18,15 @@ int main()
         .ZmienKolor(5);
     Lacze.Inicjalizuj();
     Lacze.ZmienTrybRys(PzG::TR_3D);
-    Lacze.UstawZakresY(-100, 125);
-    Lacze.UstawZakresX(-150, 250);
-    Lacze.UstawZakresZ(-125, 125);
-    Lacze.UstawSkaleXZ(1, 1.5);
+    Lacze.UstawZakresX(-200, 200);
+    Lacze.UstawZakresY(-200, 200);
+    Lacze.UstawZakresZ(-100, 120);
+    Lacze.UstawRotacjeXZ(64, 65);
 
-    Matrix3x3 r_matrix1;
-    Matrix3x3 r_matrix2;
-    Matrix3x3 r_matrix3;
-    Cuboid c(0, 0, 0, 50, 50, 50);
-    int i = 0;
-    c.Write_to_file("../data/vertices.dat", Overwrite);
-
-    // Lacze.Rysuj();
-    // std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000));
-
-    // c.Side_length();
-
-    set_Rotation_OX(r_matrix1, 1);
-    set_Rotation_OY(r_matrix2, 1);
-
-    r_matrix3 = r_matrix2 * r_matrix1;
-
-    while (i < 360)
-    {
-        c.Rotation(r_matrix1);
-        c.Rotation(r_matrix2);
-        c.Write_to_file("../data/vertices.dat", Overwrite);
-        std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000 / 60));
-        Lacze.Rysuj();
-        i++;
-    }
-    c.Side_length();
+    Scene scene_3D;
     char option = ' ';
+    int i = 0, o = 0;
 
-    Lacze.Rysuj();
     Display_menu();
 
     do
@@ -88,10 +46,54 @@ int main()
             Display_menu();
             break;
         case 'c':
-            c.Side_length();
+            scene_3D.Check_side_length();
+            break;
+        case 'd':
+            scene_3D.Display_vertices();
+            break;
+        case 's':
+            scene_3D.Show_rotation_matrix();
+            break;
+        case 'r':
+            scene_3D.Get_rotation_sequence();
+            std::cout << "How many times do you want to rotate it?" << std::endl;
+            std::cout << "Insert amount of rotations ";
+            std::cin >> i;
+            o = i;
+            std::cout << "Estimated time of animation " << double(i / 60) << "[s]" << std::endl;
+            scene_3D.Animate(Lacze, i);
+            i = 0;
+            break;
+        case 'o':
+            scene_3D.Set_previous_rotation();
+            scene_3D.Animate(Lacze, o);
+            break;
+        case 't':
+            scene_3D.Get_translation_vector();
+            std::cout << "In how many frames do you want to animate it?" << std::endl;
+            std::cout << "Insert amount of frames ";
+            std::cin >> i;
+            std::cout << "Estimated time of animation " << double(i / 60) << "[s]" << std::endl;
+            scene_3D.Animate(Lacze, i);
+            i = 0;
             break;
         default:
             break;
         }
     } while (option != 'q');
+
+    Matrix4x4 m;
+    RotXYZ_translate(m, 30, 30, 30, Vector3D({1, 1, 1}));
+}
+
+void Display_menu()
+{
+    std::cout << "\n r-rotate cuboid" << std::endl;
+    std::cout << " o-repeat previous rotation" << std::endl;
+    std::cout << " s-show rotation matrix" << std::endl;
+    std::cout << " t-translate cuboid" << std::endl;
+    std::cout << " d-display cuboid's vertices" << std::endl;
+    std::cout << " c-check length of cuboid's sides" << std::endl;
+    std::cout << " m-show menu" << std::endl;
+    std::cout << " q-quit" << std::endl;
 }

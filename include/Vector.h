@@ -66,6 +66,14 @@ public:
     */
     Vector<T, size> operator-(const Vector<T, size> &v2) const;
 
+    /** @fn    Vector<T, size> operator/(const double scalar) const
+    *   @brief Vector / scalar
+    *   
+    *   Overloaded / operator. Division of Vector.
+    *   Value of each cell of Vector divided by passed scalar value.
+    */
+    Vector<T, size> operator/(const double scalar) const;
+
     /** @fn    Vector<T, size> operator*(const T scalar) const
     *   @brief Vector * scalar
     *   
@@ -180,6 +188,23 @@ Vector<T, size> Vector<T, size>::operator-(const Vector<T, size> &v2) const
     for (int i = 0; i < size; ++i)
     {
         result.Components[i] = this->Components[i] - v2.Components[i];
+    }
+    return result;
+}
+
+template <typename T, const int size>
+Vector<T, size> Vector<T, size>::operator/(const double scalar) const
+{
+    if (scalar == 0)
+    {
+        throw std::invalid_argument("Divison by 0 exception");
+        return (Vector<T, size>());
+    }
+
+    Vector<T, size> result;
+    for (int i = 0; i < size; ++i)
+    {
+        result.Components[i] = this->Components[i] / scalar;
     }
     return result;
 }

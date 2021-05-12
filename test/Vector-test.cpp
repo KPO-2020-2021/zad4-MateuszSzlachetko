@@ -103,6 +103,25 @@ TEST(Vector, Subtraction)
     EXPECT_EQ(result3, (Vector<double, 5>({-8, 0.123, 8, -799, -98})));
 }
 
+TEST(Vector, Division_vector_product)
+{
+    Vector<double, 3> v1({1, 1, 1});
+    Vector<double, 3> v2;
+
+    v2 = v1 / 5;
+
+    EXPECT_EQ(v2, (Vector<double, 3>({0.2, 0.2, 0.2})));
+
+    Vector<double, 4> v3({2, 1, -0.8, 0});
+    Vector<double, 4> v4;
+
+    v4 = v3 / 1;
+
+    EXPECT_EQ(v4, (Vector<double, 4>({2, 1, -0.8, 0})));
+
+    EXPECT_THROW(v3 / 0, std::invalid_argument);
+}
+
 TEST(Vector, Multiplication_scalar_product)
 {
     Vector<double, 3> v1({1, 1, 1});
