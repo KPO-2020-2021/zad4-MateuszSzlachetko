@@ -1,9 +1,19 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+/** @file 
+ *  @brief Matrix template
+ */
+
 #include "Vector.h"
 
-/// Matrix of size nxn(square)
+/** @class Matrix
+ *  @brief Templated Matrix class
+ * 
+ * Square Matrix of double,int,float type etc.
+ *
+ * nxn size - (2x2,3x3 etc.)
+ */
 template <typename T, const int size>
 class Matrix
 {
@@ -11,21 +21,99 @@ private:
     Vector<T, size> Array[size];
 
 public:
+    /** @fn  Matrix()
+    *   @brief Default constructor
+    *   
+    *   Each line of Array is filled
+    *   with zeros (0).
+    */
     Matrix();
+
+    /** @fn  Matrix(const std::initializer_list<Vector<T, size>> &elements)
+    *   @brief Vectors constructor
+    *   
+    *   Each line of Array is filled
+    *   with passed Vector of appropriate size.
+    */
     Matrix(const std::initializer_list<Vector<T, size>> &elements);
+
+    /** @fn   Matrix(const std::initializer_list<T> &elements)
+    *   @brief Numbers constructor
+    *   
+    *   Each line of Array is filled
+    *   with single elements,passed in initializer list.
+    * 
+    *   Then init list transformed to std::vector
+    *   is passed in array loop,applying each value for
+    *   specific cell.
+    */
     Matrix(const std::initializer_list<T> &elements);
 
+    /** @fn   Vector<T, size> operator*(const Vector<T, size> &v) const
+    *   @brief Matrix * Vector 
+    *   
+    *   Matrix and Vector multiplication.
+    * 
+    *   Each row of matrix multiplied with passed
+    *   
+    *   @param v - Vector of appropriate size and type
+    * 
+    *   Product of such multiplication is a scalar value so then a
+    *   
+    *   @return Vector
+    * 
+    *   from these scalars is created and returned.
+    * 
+    */
     Vector<T, size> operator*(const Vector<T, size> &v) const;
+
+    /** @fn   Matrix<T, size> operator*(const Matrix<T, size> &m) const
+    *   @brief Matrix * Matrix
+    *   
+    *   Matrix and Matrix multiplication.Matrix as a product.
+    *   
+    *   Classical algorithm of matrix multiplication O(n^3)
+    *   
+    *   @param m - Matrix of appropriate size and type
+    */
     Matrix<T, size> operator*(const Matrix<T, size> &m) const;
 
+    /** @fn std::ostream &operator<<(std::ostream &os, const Matrix<P, _size> &m)
+    *   @brief Matrix display
+    *   
+    *   Each row of matrix(which is actually a Vector)
+    *   is outputed in a loop,row by row.
+    */
     template <typename P, const int _size>
     friend std::ostream &operator<<(std::ostream &os, const Matrix<P, _size> &m);
 
+    /** @fn bool operator==(const Matrix<P, _size> &m1, const Matrix<P, _size> &m2)
+    *   @brief Matrix comparison
+    * 
+    *  Both values from passed Matrices are checked if they are equal.
+    *  
+    *  If yes
+    *  @return true
+    * 
+    *  If no
+    *  @return false
+    */
     template <typename P, const int _size>
     friend bool operator==(const Matrix<P, _size> &m1, const Matrix<P, _size> &m2);
 
+    /** @fn Vector<T, size> operator[](int index) const
+    *   @brief Matrix index operator
+    * 
+    *   Array type of operator.Passing const object,only for reading.
+    */
     Vector<T, size> operator[](int index) const; // operator for reading
-    Vector<T, size> &operator[](int index);      // operator for setting
+
+    /** @fn Vector<T, size> &operator[](int index)
+    *   @brief Matrix index operator
+    * 
+    *   Array type of operator.Passing non-const object,for setting value of specific cell.
+    */
+    Vector<T, size> &operator[](int index); // operator for setting
 };
 
 template <typename T, const int size>
@@ -73,8 +161,6 @@ Vector<T, size> Matrix<T, size>::operator*(const Vector<T, size> &v) const
 template <typename T, const int size>
 Matrix<T, size> Matrix<T, size>::operator*(const Matrix<T, size> &m) const
 {
-    /// CLASSICAL ALGORITHM OF MATRIX MULTIPLICATION
-    /// O(n^3)
     int i, j, k;
     Matrix<T, size> result;
     for (i = 0; i < size; ++i)

@@ -4,6 +4,9 @@
 #include <thread>
 #include "Cuboid.h"
 
+/** @file
+ */
+
 void Display_menu()
 {
     std::cout << "\n r-rotate cuboid" << std::endl;

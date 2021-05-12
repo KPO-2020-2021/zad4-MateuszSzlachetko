@@ -1,6 +1,10 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+/** @file 
+ *  @brief Vector template
+ */
+
 #include <iostream>
 #include <initializer_list>
 #include <cmath>
@@ -8,6 +12,13 @@
 
 constexpr double MIN_DIFF = 0.0000000001;
 
+/** @class Vector
+ *  @brief Templated Vector class
+ * 
+ * Vector of double,int,float type etc.
+ *
+ * n size - (1,2,3 etc.)
+ */
 template <typename T, const int size>
 class Vector
 {
@@ -15,27 +26,113 @@ private:
     T Components[size];
 
 public:
+    /** @fn  Vector()
+    *   @brief Default constructor
+    *   
+    *   Each element of Vector is filled
+    *   with zero (0).
+    */
     Vector();
+
+    /** @fn   Vector(const std::initializer_list<T> &elements)
+    *   @brief Numbers constructor
+    *   
+    *   Each line of Vector is filled
+    *   with single elements,passed in initializer list.
+    */
     Vector(const std::initializer_list<T> &elements);
+
+    /** @fn    Vector(const std::vector<T> &elements)
+    *   @brief Numbers constructor
+    *   
+    *   Each line of Vector is filled
+    *   with single elements,passed in std::vector.
+    */
     Vector(const std::vector<T> &elements);
 
+    /** @fn    Vector<T, size> operator+(const Vector<T, size> &v2) const
+    *   @brief Vector + Vector
+    *   
+    *   Overloaded + operator. Sum of two Vectors.
+    *   Value of each cell added to analogous cell of second Vector.
+    */
     Vector<T, size> operator+(const Vector<T, size> &v2) const;
+
+    /** @fn    Vector<T, size> operator-(const Vector<T, size> &v2) const
+    *   @brief Vector - Vector
+    *   
+    *   Overloaded - operator. Subtracion of two Vectors.
+    *   Value of each cell of right Vector subtracted from analogous cell of first Vector.
+    */
     Vector<T, size> operator-(const Vector<T, size> &v2) const;
-    Vector<T, size> operator*(const double scalar) const; // scalar multiplication from the right
-    double operator*(const Vector<T, size> &v2) const;
+
+    /** @fn    Vector<T, size> operator*(const T scalar) const
+    *   @brief Vector * scalar
+    *   
+    *   Overloaded * operator. Multiplication of vector and scalar value,scalar (T) value as a product
+    *   then returned in a new Vector (one by one list of type T elements).
+    */
+    Vector<T, size> operator*(const T scalar) const;
+
+    /** @fn    T operator*(const Vector<T, size> &v2) const
+    *   @brief Vector * Vector
+    *   
+    *   Overloaded * operator. Multiplication of two vectors,analogous multiplied cells added
+    *   to global result
+    *   
+    *   @return T -type value sum of all multiplications
+    */
+    T operator*(const Vector<T, size> &v2) const;
     double Length() const;
 
+    /** @fn bool operator==(const Vector<P, _size> &v1, const Vector<P, _size> &v2)
+    *   @brief Vector comparison
+    * 
+    *  Both values from passed Vectors are checked if they are equal.
+    *  
+    *  If yes
+    *  @return true
+    * 
+    *  If no
+    *  @return false
+    * 
+    * Minimal difference threshold is applied to ignore thrash values.
+    */
     template <typename P, const int _size>
     friend bool operator==(const Vector<P, _size> &v1, const Vector<P, _size> &v2);
 
+    /** @fn std::ostream &operator<<(std::ostream &os, const Vector<P, _size> &v)
+    *   @brief Vector display
+    *   
+    *   Each element of Vector
+    *   is outputed in a loop,element by element.
+    */
     template <typename P, const int _size>
     friend std::ostream &operator<<(std::ostream &os, const Vector<P, _size> &v);
 
+    /** @fn std::istream &operator>>(std::istream &is, Vector<P, _size> &v)
+    *   @brief Vector read
+    *   
+    *   Each readed element is applied to appropriate cell of vector.
+    * 
+    *   If value of a wrong type is passed,there will be an error thrown.
+    */
     template <typename P, const int _size>
     friend std::istream &operator>>(std::istream &is, Vector<P, _size> &v);
 
-    T operator[](int index) const; // operator for reading
-    T &operator[](int index);      // operator for setting
+    /** @fn T operator[](int index) const
+    *   @brief Vector index operator
+    * 
+    *   Array type of operator.Passing const object,only for reading.
+    */
+    T operator[](int index) const;
+
+    /** @fn T &operator[](int index)
+    *   @brief Vector index operator
+    * 
+    *   Array type of operator.Passing non-const object,for setting value of specific element.
+    */
+    T &operator[](int index);
 };
 
 template <typename T, const int size>
@@ -88,7 +185,7 @@ Vector<T, size> Vector<T, size>::operator-(const Vector<T, size> &v2) const
 }
 
 template <typename T, const int size>
-Vector<T, size> Vector<T, size>::operator*(const double scalar) const
+Vector<T, size> Vector<T, size>::operator*(const T scalar) const
 {
     Vector<T, size> result;
     for (int i = 0; i < size; ++i)
@@ -99,9 +196,9 @@ Vector<T, size> Vector<T, size>::operator*(const double scalar) const
 }
 
 template <typename T, const int size>
-double Vector<T, size>::operator*(const Vector<T, size> &v2) const
+T Vector<T, size>::operator*(const Vector<T, size> &v2) const
 {
-    double result = 0;
+    T result = 0;
     for (int i = 0; i < size; ++i)
     {
         result += this->Components[i] * v2.Components[i];
