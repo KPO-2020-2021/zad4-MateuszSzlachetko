@@ -1,4 +1,4 @@
-# Projekt 3 - Rotacje 2D
+# Projekt 4 - Rotacje 3D
 
 ## Budowanie programu i testów
 
