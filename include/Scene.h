@@ -16,7 +16,7 @@
  */
 class Scene
 {
-public:
+private:
     Cuboid _cuboid;
 
     Matrix3x3 rotation_matrix;
