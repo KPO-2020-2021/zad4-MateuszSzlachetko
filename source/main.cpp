@@ -5,8 +5,6 @@ void Display_menu();
 
 int main()
 {
-    std::cout << "TEST" << std::endl;
-
     PzG::LaczeDoGNUPlota Lacze;
     Lacze.DodajNazwePliku("../data/vertices.dat")
         .ZmienSposobRys(PzG::SR_Ciagly)
